@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ -z "$1" ]
+  then
+    echo "No argurments supplied"
+    exit 0
+fi
+NODE_IP=$1
+
 GRUB_BACKUP=/etc/default/grub_backup
 
 if [ ! -f ${GRUB_BACKUP} ]; then
@@ -8,6 +15,6 @@ if [ ! -f ${GRUB_BACKUP} ]; then
   sudo update-grub
   sudo reboot
 else
-  bash sr-iov.sh
-  bash kub-install.sh
+  bash sr-iov.sh ${NODE_IP}
+  bash kub-install.sh ${NODE_IP}
 fi
