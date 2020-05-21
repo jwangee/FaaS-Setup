@@ -21,7 +21,7 @@ else
   curl -s -L ${DPDK_URL}${DPDK_VERSION}.tar.gz | tar zx -C ${DPDK_DIR} --strip-components 1
 fi
 
-INTERFACE=$(ifconfig | grep -B 1 ${NODE_IP} | head -1 | cut -d ':' -f 1)
+INTERFACE=$(ifconfig | grep -B 1 ${NODE_IP} | head -1 | cut -d ':' -f 1 | cut -d ' ' -f 1)
 PCI_DEVICE=$(sudo lshw -class network -businfo | grep ${INTERFACE} | cut -d ' ' -f 1 | cut -d '@' -f 2)
 
 echo "interface=${INTERFACE}"

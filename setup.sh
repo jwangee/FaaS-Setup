@@ -15,7 +15,7 @@ if [ ! -f ${GRUB_BACKUP} ]; then
   sudo update-grub
   sudo reboot
 else
+  cd $(dirname ${0})
   bash sr-iov.sh ${NODE_IP}
   bash kub-install.sh ${NODE_IP}
 fi
-
