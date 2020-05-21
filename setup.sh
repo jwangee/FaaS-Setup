@@ -18,3 +18,4 @@ else
   bash sr-iov.sh ${NODE_IP}
   bash kub-install.sh ${NODE_IP}
 fi
+

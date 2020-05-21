@@ -114,3 +114,4 @@ else
     sudo ${KUBE_JOIN}
     log "Joined"
 fi
+
