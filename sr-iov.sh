@@ -1,6 +1,5 @@
 #!/bin/bash
 
-KUBE_JOIN=/local/kube_join.sh
 if [ -z "$1" ]
   then
     echo "No argurments supplied"
