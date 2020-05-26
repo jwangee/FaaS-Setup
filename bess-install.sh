@@ -21,7 +21,7 @@ echo 2048 | sudo tee /sys/devices/system/node/node1/hugepages/hugepages-2048kB/n
 cd /local
 git clone https://github.com/NetSys/bess.git
 cd bess/
-./build.py
+sudo ./build.py
 
 # Install DPDK
 cd /local
