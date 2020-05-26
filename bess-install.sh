@@ -8,6 +8,7 @@ fi
 NODE_IP=$1
 
 # Install dependencies
+sudo apt update
 sudo apt install make apt-transport-https ca-certificates g++ make pkg-config libunwind8-dev liblzma-dev zlib1g-dev libpcap-dev libssl-dev libnuma-dev git python python-pip python-scapy libgflags-dev libgoogle-glog-dev libgraph-easy-perl libgtest-dev libgrpc++-dev libprotobuf-dev libc-ares-dev libbenchmark-dev libgtest-dev protobuf-compiler-grpc -y
 # The following packages are needed to run bessctl
 sudo pip install protobuf grpcio scapy
