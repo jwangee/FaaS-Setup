@@ -12,7 +12,7 @@ cd protobuf
 git submodule update --init --recursive
 ./autogen.sh
 ./configure
-make -j16
+make -j
 make check
 sudo make install
 sudo ldconfig
@@ -25,3 +25,7 @@ go get google.golang.org/grpc
 # protoc plugin for Go
 go get github.com/golang/protobuf/protoc-gen-go
 export PATH="$PATH:$(go env GOPATH)/bin"
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
