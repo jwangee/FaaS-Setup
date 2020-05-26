@@ -111,7 +111,7 @@ else
     #    sleep 5
     #done
     log "Joining"
-    sudo ${KUBE_JOIN} --node-name $(hostname | cut -d. -f1)
+    sed -i "$ s/$/ --node-name $(hostname | cut -d. -f1)/" ${KUBE_JOIN}
+    sudo ${KUBE_JOIN}
     log "Joined"
 fi
-
