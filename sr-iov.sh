@@ -26,13 +26,25 @@ PCI_DEVICE=$(sudo lshw -class network -businfo | grep ${INTERFACE} | cut -d ' ' 
 echo "interface=${INTERFACE}"
 echo "pcie=${PCI_DEVICE}"
 
-sudo modprobe vfio-pci
-
 echo "Set up SRIOV for NIC."
 echo 15 | sudo tee /sys/bus/pci/devices/${PCI_DEVICE}/sriov_numvfs
 
-echo "Bind to driver vfio-pci..."
-sudo ${DEV_BIND_TOOL} -b vfio-pci $(${DEV_BIND_TOOL} --status | grep 'Virtual Function' | cut -d ' ' -f 1)
+echo "Bind to driver igb_uio..."
+cd ${DPDK_DIR}
+make config T=x86_64-native-linuxapp-gcc
+make -j
+cd -
+sudo modprobe uio
+sudo insmod ${DPDK_DIR}/build/kmod/igb_uio.ko
+sudo ${DEV_BIND_TOOL} --force -u $(${DEV_BIND_TOOL} --status | grep 'Virtual Function' | cut -d ' ' -f 1)
+sudo ${DEV_BIND_TOOL} -b igb_uio $(${DEV_BIND_TOOL} --status | grep 'Virtual Function' | cut -d ' ' -f 1)
+
+#echo "Bind to driver vfio-pci..."
+#sudo modprobe vfio-pci
+#sudo ${DEV_BIND_TOOL} --force -u $(${DEV_BIND_TOOL} --status | grep 'Virtual Function' | cut -d ' ' -f 1)
+#sudo ${DEV_BIND_TOOL} -b vfio-pci $(${DEV_BIND_TOOL} --status | grep 'Virtual Function' | cut -d ' ' -f 1)
+
+ip link show
 
 echo "Configures MAC address for vf..."
 sudo ip link set dev ${INTERFACE} down

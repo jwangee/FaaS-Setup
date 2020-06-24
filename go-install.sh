@@ -18,14 +18,20 @@ sudo make install
 sudo ldconfig
 cd -
 
-# Install gRPC as a go module
-export GO111MODULE=on
-go get google.golang.org/grpc
-
-# protoc plugin for Go
-go get github.com/golang/protobuf/protoc-gen-go
-export PATH="$PATH:$(go env GOPATH)/bin"
-
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+## Install gRPC as a go module
+#export GO111MODULE=on
+#go get google.golang.org/grpc
+#
+## Install protoc plugin for Go
+#go get github.com/golang/protobuf/protoc-gen-go
+#export PATH="$PATH:$(go env GOPATH)/bin"
+#
+## Copy k8s config
+#mkdir -p $HOME/.kube
+#sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+#sudo chown $(id -u):$(id -g) $HOME/.kube/config
+#
+## Install controller
+#git clone https://github.com/USC-NSL/Low-Latency-FaaS.git
+#cd Low-Latency-FaaS
+#make
