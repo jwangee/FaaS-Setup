@@ -7,13 +7,14 @@ sudo apt-get install golang-go -y
 
 # Install protobuf
 sudo apt-get install autoconf automake libtool curl make g++ unzip -y
+cd $(dirname ${0})
 git clone https://github.com/google/protobuf.git
 cd protobuf
 git submodule update --init --recursive
 ./autogen.sh
 ./configure
 make -j
-make check
+make check -j
 sudo make install
 sudo ldconfig
 cd -
