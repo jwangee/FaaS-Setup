@@ -57,7 +57,7 @@ log "Installed kubernetes"
 sudo swapoff -a
 
 
-#echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=$NODE_IP\"" | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=$NODE_IP\"" | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 log "Started kubernetes"
