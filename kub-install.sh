@@ -2,13 +2,14 @@
 
 LOG="/local/kube_start.log"
 KUBE_JOIN=/local/kube_join.sh
-if [ -z "$1" ]
-  then
-    echo "No argurments supplied"
-    exit 0
-fi
+#if [ -z "$1" ]
+#  then
+#    echo "No argurments supplied"
+#    exit 0
+#fi
 #NODE_IP=$1
-#echo "ip=${NODE_IP}"
+NODE_IP=$(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
+echo "ip=${NODE_IP}"
 
 #sudo rm -f ${KUBE_JOIN}
 
