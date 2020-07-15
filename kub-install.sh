@@ -7,8 +7,8 @@ if [ -z "$1" ]
     echo "No argurments supplied"
     exit 0
 fi
-NODE_IP=$1
-echo "ip=${NODE_IP}"
+#NODE_IP=$1
+#echo "ip=${NODE_IP}"
 
 #sudo rm -f ${KUBE_JOIN}
 
@@ -56,7 +56,7 @@ log "Installed kubernetes"
 sudo swapoff -a
 
 
-echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=$NODE_IP\"" | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+#echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=$NODE_IP\"" | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 log "Started kubernetes"
