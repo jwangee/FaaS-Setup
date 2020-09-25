@@ -19,7 +19,7 @@ echo 2048 | sudo tee /sys/devices/system/node/node1/hugepages/hugepages-2048kB/n
 
 # Install BESS
 cd /local
-git clone https://github.com/NetSys/bess.git
+git clone https://github.com/jwangee/bess.git
 cd bess/
 sudo ./build.py
 
