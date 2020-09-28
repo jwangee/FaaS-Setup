@@ -12,6 +12,8 @@ DPDK_VERSION="dpdk-17.11"
 DPDK_DIR="dpdk-17.11"
 DEV_BIND_TOOL="${DPDK_DIR}/usertools/dpdk-devbind.py"
 
+sudo apt install -y libnuma-dev
+
 if [ -d ${DPDK_DIR} ]; then
   echo "Directory ${DPDK_DIR} already exists."
 else
