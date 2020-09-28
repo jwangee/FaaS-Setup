@@ -74,9 +74,13 @@ if [[ ${HOSTNAME} =~ "node0" ]]; then
     log "Exported KUBECONFIG"
     JOIN_STRING="$(sudo kubeadm init --pod-network-cidr=192.168.0.0/16 | tail -2)"
     log "Finished kubeadm init"
+
+    # Prepare the kubeconfig file for worker nodes.
+    sudo rm -f /local/kubeconfig
     sudo cp -i /etc/kubernetes/admin.conf /local/kubeconfig
     sudo chmod 777 /local/kubeconfig
     #sudo chown $(id -u):$(id -g) /local/kubeconfig
+
     mkdir -p $HOME/.kube
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -91,7 +95,6 @@ if [[ ${HOSTNAME} =~ "node0" ]]; then
     echo "${JOIN_STRING}" >> ${LOCAL_KUBE_JOIN}
     sudo chmod 777 ${LOCAL_KUBE_JOIN}
     sudo mv ${LOCAL_KUBE_JOIN} ${KUBE_JOIN}
-    #sudo echo ${JOIN_STRING} >> ${KUBE_JOIN}
     log "Created kube join file"
 else
     log "I am a worker"
@@ -106,6 +109,7 @@ else
         log "Waiting for the kubernetes token..."
         sleep 5
     done
+
     #until [ -f ${KUBE_JOIN} ]
     #do
     #echo "Waiting for join command" >> ${LOG}

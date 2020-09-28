@@ -46,8 +46,7 @@ fi
 echo "NodeName=$NODE_NAME" > ${NODE_NAME}.info
 echo "IP=$NODE_PUBLIC_IP" >> ${NODE_NAME}.info
 
-if [ "$NODE_TYPE" == "Master" ];
-then
+if [ "$NODE_TYPE" == "Master" ]; then
     # Handle FaaS master node.
     echo "CPU=16" >> ${NODE_NAME}.info
 else
