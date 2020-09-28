@@ -11,6 +11,7 @@ sudo apt install protobuf-compiler-grpc python-gflags -y
 sudo pip install protobuf grpcio grpcio-tools webob tinyrpc scapy
 
 # Install Ryu
+sudo chmod 777 /local
 cd /local
 git clone https://github.com/faucetsdn/ryu.git
 cd ryu/
