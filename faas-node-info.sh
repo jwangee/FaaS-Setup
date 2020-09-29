@@ -13,10 +13,12 @@ usage() {
 NODE_TYPE=""
 NODE_NAME=""
 NODE_PUBLIC_IP=$(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
+NODE_INFO_FILE=/local/${NODE_NAME}.info
 
 DPDK_VERSION="dpdk-17.11"
 DPDK_DIR="/local/dpdk-17.11"
 DEV_BIND_TOOL="${DPDK_DIR}/usertools/dpdk-devbind.py"
+
 
 while getopts "h?t:n:" opt; do
     case "${opt}" in
@@ -43,17 +45,17 @@ if [ -z ${NODE_NAME} ]; then
 fi
 
 # Main
-echo "NodeName=$NODE_NAME" > ${NODE_NAME}.info
-echo "IP=$NODE_PUBLIC_IP" >> ${NODE_NAME}.info
+echo "NodeName=$NODE_NAME" > ${NODE_INFO_FILE}
+echo "IP=$NODE_PUBLIC_IP" >> ${NODE_INFO_FILE}
 
 if [ "$NODE_TYPE" == "Master" ]; then
     # Handle FaaS master node.
-    echo "CPU=16" >> ${NODE_NAME}.info
+    echo "CPU=16" >> ${NODE_INFO_FILE}
 else
     # Handle FaaS worker nodes.
     TOTAL_VF=$(sudo ${DEV_BIND_TOOL} --status | grep 'Virtual Function' | wc -l)
-    echo "CPU=$TOTAL_VF" >> ${NODE_NAME}.info
+    echo "CPU=$TOTAL_VF" >> ${NODE_INFO_FILE}
 
     DEV_BIND_TOOL="${DPDK_DIR}/usertools/dpdk-devbind.py"
-    sudo ${DEV_BIND_TOOL} --status | grep 'Virtual Function' | cut -d ' ' -f 1 >> ${NODE_NAME}.info
+    sudo ${DEV_BIND_TOOL} --status | grep 'Virtual Function' | cut -d ' ' -f 1 >> ${NODE_INFO_FILE}
 fi

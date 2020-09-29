@@ -7,17 +7,18 @@
 set -e
 
 usage() {
-        echo "faas-node-info.sh -t <NODE_TYPE> -i <NODE_IP>"
+        echo "faas-node-info.sh -t <NODE_TYPE> -i <NODE_IP> -n <NODE_NAME>"
 }
 
 NODE_TYPE=""
 NODE_IP=""
+NODE_NAME=""
 GRUB_BACKUP=/etc/default/grub_backup
 INSTALL_DIR=$(dirname ${0})
 LOG_FILE=/local/setup.log
 
 
-while getopts "h?t:i:" opt; do
+while getopts "h?t:i:n:" opt; do
     case "${opt}" in
         h|\?)
             usage
@@ -29,6 +30,9 @@ while getopts "h?t:i:" opt; do
         i)
             NODE_IP=${OPTARG}
             ;;
+        n)
+            NODE_NAME=${OPTARG}
+            ;;
     esac
 done
 
@@ -37,6 +41,10 @@ if [ -z ${NODE_TYPE} ]; then
         exit -1
 fi
 if [ -z ${NODE_IP} ]; then
+        usage
+        exit -1
+fi
+if [ -z ${NODE_NAME} ]; then
         usage
         exit -1
 fi
@@ -67,12 +75,14 @@ if [ "$NODE_TYPE" == "Master" ]; then
     bash /local/kub-install.sh ${NODE_IP} >> $LOG_FILE
     bash /local/go-install.sh >> $LOG_FILE
     bash /local/nf-install.sh >> $LOG_FILE
+    bash /local/nf-install.sh -t Master -n $NODE_NAME
 elif [ "$NODE_TYPE" == "Traffic" ]; then
     bash /local/bess-install.sh ${NODE_IP} >> $LOG_FILE
     bash /local/nf-install.sh >> $LOG_FILE
 elif [ "$NODE_TYPE" == "Worker" ]; then
     bash /local/kub-install.sh ${NODE_IP} >> $LOG_FILE
     bash /local/sr-iov.sh ${NODE_IP} >> $LOG_FILE
+    bash /local/nf-install.sh -t Master -n $NODE_NAME
 fi
 
 echo "Done!"  >> $LOG_FILE

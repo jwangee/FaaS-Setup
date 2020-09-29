@@ -56,14 +56,14 @@ log "Installed kubernetes"
 
 sudo swapoff -a
 
-
 echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=$NODE_IP\"" | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 log "Started kubernetes"
 
 HOSTNAME="$(hostname)"
-#echo ${HOSTNAME}
+KUBE_CONFIG_DIR=/users/uscnsl/.kube
+
 
 if [[ ${HOSTNAME} =~ "node0" ]]; then
     echo "export KUBECONFIG=/local/kubeconfig" | sudo tee -a /etc/environment
@@ -81,9 +81,11 @@ if [[ ${HOSTNAME} =~ "node0" ]]; then
     sudo chmod 777 /local/kubeconfig
     #sudo chown $(id -u):$(id -g) /local/kubeconfig
 
-    mkdir -p $HOME/.kube
-    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    sudo chmod 777 /users/uscnsl
+    mkdir -p $KUBE_CONFIG_DIR
+    sudo cp -i /etc/kubernetes/admin.conf $KUBE_CONFIG_DIR/config
+    sudo chmod 777 $KUBE_CONFIG_DIR/config
+    #sudo chown $(id -u):$(id -g) $KUBE_CONFIG_DIR/config
 
     kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
     log "Applied Weave"
