@@ -1,19 +1,56 @@
 #!/bin/bash
+#
+# This script installs Kubernetes supports for a node.
+#
 
-LOG="/local/kube_start.log"
+set -e
+
+usage() {
+        echo "kub-install.sh -t <NODE_TYPE> -i <NODE_IP> -n <NODE_NAME>"
+}
+
+NODE_TYPE=""
+NODE_IP=""
+NODE_NAME=""
+
+while getopts "h?t:i:n:" opt; do
+    case "${opt}" in
+        h|\?)
+            usage
+            exit 0
+            ;;
+        t)
+            NODE_TYPE=${OPTARG}
+            ;;
+        i)
+            NODE_IP=${OPTARG}
+            ;;
+        n)
+            NODE_NAME=${OPTARG}
+            ;;
+    esac
+done
+
+if [ -z ${NODE_TYPE} ]; then
+        usage
+        exit -1
+fi
+if [ -z ${NODE_IP} ]; then
+        usage
+        exit -1
+fi
+if [ -z ${NODE_NAME} ]; then
+        usage
+        exit -1
+fi
+
+
+LOG=/local/kube_install.log
 KUBE_JOIN=/local/kube_join.sh
-#if [ -z "$1" ]
-#  then
-#    echo "No argurments supplied"
-#    exit 0
-#fi
-#NODE_IP=$1
-NODE_IP=$(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
-echo "ip=${NODE_IP}"
-
-#sudo rm -f ${KUBE_JOIN}
+NODE_PUBLIC_IP=$(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
 
 log() {
+    echo "ip=${NODE_PUBLIC_IP}" > ${LOG}
 	echo "$(date): $1" >> ${LOG}
 }
 log "Executing kube-start"
@@ -23,9 +60,13 @@ log "Executing kube-start"
 chmod 600 ~/.ssh/id_rsa
 ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-chmod 644 ~/.ssh/authorized_keys
-log "Created ssh key"
 
+chmod 700 ~/.ssh/
+chmod 644 ~/.ssh/authorized_keys
+chmod 644 ~/.ssh/known_hosts
+chmod 600 ~/.ssh/id_rsa
+chmod 644 ~/.ssh/id_rsa.pub
+log "Created ssh key"
 
 #curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-get update
@@ -56,7 +97,7 @@ log "Installed kubernetes"
 
 sudo swapoff -a
 
-echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=$NODE_IP\"" | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+echo "Environment=\"KUBELET_EXTRA_ARGS=--node-ip=$NODE_PUBLIC_IP\"" | sudo tee -a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 log "Started kubernetes"
@@ -65,7 +106,7 @@ HOSTNAME="$(hostname)"
 KUBE_CONFIG_DIR=/users/uscnsl/.kube
 
 
-if [[ ${HOSTNAME} =~ "node0" ]]; then
+if [[ ${NODE_TYPE} =~ "Master" ]]; then
     echo "export KUBECONFIG=/local/kubeconfig" | sudo tee -a /etc/environment
     log "I am the master"
     log "Made proj directory"
@@ -98,8 +139,11 @@ if [[ ${HOSTNAME} =~ "node0" ]]; then
     sudo chmod 777 ${LOCAL_KUBE_JOIN}
     sudo mv ${LOCAL_KUBE_JOIN} ${KUBE_JOIN}
     log "Created kube join file"
-else
+fi
+
+if [[ ${NODE_TYPE} =~ "Worker" ]]; then
     log "I am a worker"
+
     MASTER_HOST="node0.$(hostname | cut -d. -f2-)"
     ssh-keyscan -H ${MASTER_HOST} >> ~/.ssh/known_hosts
     while true
@@ -112,11 +156,6 @@ else
         sleep 5
     done
 
-    #until [ -f ${KUBE_JOIN} ]
-    #do
-    #echo "Waiting for join command" >> ${LOG}
-    #    sleep 5
-    #done
     log "Joining"
     sed -i "$ s/$/ --node-name $(hostname | cut -d. -f1)/" ${KUBE_JOIN}
     sudo ${KUBE_JOIN}

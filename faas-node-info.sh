@@ -3,6 +3,7 @@
 # Collect information needed by the FaaS-NFV Controller.
 # FaaS master node: nodeName, public IP, CPU
 # FaaS worker nodes: nodeName, public IP, CPU, PCIe devices, switchPort
+#
 
 set -e
 
@@ -13,12 +14,9 @@ usage() {
 NODE_TYPE=""
 NODE_NAME=""
 NODE_PUBLIC_IP=$(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
-NODE_INFO_FILE=/local/${NODE_NAME}.info
-
 DPDK_VERSION="dpdk-17.11"
 DPDK_DIR="/local/dpdk-17.11"
 DEV_BIND_TOOL="${DPDK_DIR}/usertools/dpdk-devbind.py"
-
 
 while getopts "h?t:n:" opt; do
     case "${opt}" in
@@ -44,7 +42,9 @@ if [ -z ${NODE_NAME} ]; then
     exit -1
 fi
 
+
 # Main
+NODE_INFO_FILE=/local/${NODE_NAME}.info
 echo "NodeName=$NODE_NAME" > ${NODE_INFO_FILE}
 echo "IP=$NODE_PUBLIC_IP" >> ${NODE_INFO_FILE}
 

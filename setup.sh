@@ -71,18 +71,20 @@ sudo chmod 777 $INSTALL_DIR
 touch $LOG_FILE
 echo "" > $LOG_FILE
 
+
 if [ "$NODE_TYPE" == "Master" ]; then
-    bash /local/kub-install.sh ${NODE_IP} >> $LOG_FILE
+    bash /local/kub-install.sh -t Master -i ${NODE_IP} -n ${NODE_NAME} >> $LOG_FILE
     bash /local/go-install.sh >> $LOG_FILE
     bash /local/nf-install.sh >> $LOG_FILE
-    bash /local/nf-install.sh -t Master -n $NODE_NAME
+    bash /local/faas-node-info.sh -t Master -n $NODE_NAME
 elif [ "$NODE_TYPE" == "Traffic" ]; then
     bash /local/bess-install.sh ${NODE_IP} >> $LOG_FILE
     bash /local/nf-install.sh >> $LOG_FILE
 elif [ "$NODE_TYPE" == "Worker" ]; then
-    bash /local/kub-install.sh ${NODE_IP} >> $LOG_FILE
+    # Prepare local config first, and then connect to the master node.
     bash /local/sr-iov.sh ${NODE_IP} >> $LOG_FILE
-    bash /local/nf-install.sh -t Master -n $NODE_NAME
+    bash /local/faas-node-info.sh -t Worker -n $NODE_NAME
+    bash /local/kub-install.sh -t Worker -i ${NODE_IP} -n ${NODE_NAME} >> $LOG_FILE
 fi
 
 echo "Done!"  >> $LOG_FILE
