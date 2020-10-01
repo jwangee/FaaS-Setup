@@ -63,7 +63,6 @@ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
 chmod 700 ~/.ssh/
 chmod 644 ~/.ssh/authorized_keys
-chmod 644 ~/.ssh/known_hosts
 chmod 600 ~/.ssh/id_rsa
 chmod 644 ~/.ssh/id_rsa.pub
 log "Created ssh key"
@@ -122,8 +121,8 @@ if [[ ${NODE_TYPE} =~ "Master" ]]; then
     sudo chmod 777 /local/kubeconfig
     #sudo chown $(id -u):$(id -g) /local/kubeconfig
 
-    sudo chmod 777 /users/uscnsl
-    mkdir -p $KUBE_CONFIG_DIR
+    #sudo chmod 777 /users/uscnsl (This will break ssh.)
+    sudo mkdir -p $KUBE_CONFIG_DIR
     sudo cp -i /etc/kubernetes/admin.conf $KUBE_CONFIG_DIR/config
     sudo chmod 777 $KUBE_CONFIG_DIR/config
     #sudo chown $(id -u):$(id -g) $KUBE_CONFIG_DIR/config

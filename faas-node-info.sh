@@ -59,3 +59,5 @@ else
     DEV_BIND_TOOL="${DPDK_DIR}/usertools/dpdk-devbind.py"
     sudo ${DEV_BIND_TOOL} --status | grep 'Virtual Function' | cut -d ' ' -f 1 >> ${NODE_INFO_FILE}
 fi
+
+sudo chmod 777 ${NODE_INFO_FILE}
