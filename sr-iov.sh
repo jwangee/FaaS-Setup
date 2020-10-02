@@ -9,7 +9,7 @@ NODE_IP=$1
 
 DPDK_URL="https://fast.dpdk.org/rel/"
 DPDK_VERSION="dpdk-17.11"
-DPDK_DIR="dpdk-17.11"
+DPDK_DIR="/local/${DPDK_VERSION}"
 DEV_BIND_TOOL="${DPDK_DIR}/usertools/dpdk-devbind.py"
 
 sudo apt install -y libnuma-dev
@@ -28,7 +28,7 @@ PCI_DEVICE=$(sudo lshw -class network -businfo | grep ${INTERFACE} | cut -d ' ' 
 echo "interface=${INTERFACE}"
 echo "pcie=${PCI_DEVICE}"
 
-echo "Set up SRIOV for NIC."
+echo "Set up SR-IOV for the target NIC."
 echo 15 | sudo tee /sys/bus/pci/devices/${PCI_DEVICE}/sriov_numvfs
 
 echo "Bind to driver igb_uio..."

@@ -64,11 +64,12 @@ if [ ! -f ${GRUB_BACKUP} ]; then
 fi
 
 
-sudo apt update
-sudo apt -y install htop
-
+sudo chmod 777 ${INSTALL_DIR}
 touch ${LOG_FILE}
 echo "" > ${LOG_FILE}
+
+sudo apt update
+sudo apt -y install htop
 
 if [ "$NODE_TYPE" == "Master" ]; then
     bash /local/kub-install.sh -t Master -i ${NODE_IP} -n ${NODE_NAME} >> ${LOG_FILE}
