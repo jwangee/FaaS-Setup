@@ -7,11 +7,12 @@
 set -e
 
 usage() {
-        echo "faas-node-info.sh -t <NODE_TYPE> -i <NODE_IP> -n <NODE_NAME>"
+        echo "faas-node-info.sh -t <NODE_TYPE> -i <NODE_IP> -j <NODE_IP_2> -n <NODE_NAME>"
 }
 
 NODE_TYPE=""
 NODE_IP=""
+NODE_IP_2=""
 NODE_NAME=""
 GRUB_BACKUP=/etc/default/grub_backup
 INSTALL_DIR=$(dirname ${0})
@@ -29,6 +30,9 @@ while getopts "h?t:i:n:" opt; do
             ;;
         i)
             NODE_IP=${OPTARG}
+            ;;
+        j)
+            NODE_IP_2=${OPTARG}
             ;;
         n)
             NODE_NAME=${OPTARG}
@@ -77,7 +81,7 @@ if [ "$NODE_TYPE" == "Master" ]; then
     bash /local/nf-install.sh >> ${LOG_FILE}
     bash /local/faas-node-info.sh -t Master -n $NODE_NAME
 elif [ "$NODE_TYPE" == "Traffic" ]; then
-    bash /local/bess-install.sh ${NODE_IP} >> ${LOG_FILE}
+    bash /local/bess-install.sh ${NODE_IP} ${NODE_IP_2} >> ${LOG_FILE}
     bash /local/nf-install.sh >> ${LOG_FILE}
 elif [ "$NODE_TYPE" == "Worker" ]; then
     # Prepare local config first, and then connect to the master node.
