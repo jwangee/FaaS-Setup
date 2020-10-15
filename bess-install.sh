@@ -29,6 +29,7 @@ else
   cd hiredis/
   make
   sudo make install
+fi
 
 # Install BESS
 BESS_DIR="/local/bess"
@@ -76,3 +77,5 @@ INTERFACE=$(ifconfig | grep -B 1 ${NODE_IP_2} | head -1 | cut -d ':' -f 1 | cut 
 PCI_DEVICE=$(sudo lshw -class network -businfo | grep ${INTERFACE} | cut -d ' ' -f 1 | cut -d '@' -f 2)
 sudo ${DEV_BIND_TOOL} --force -u ${PCI_DEVICE}
 sudo ${DEV_BIND_TOOL} -b igb_uio ${PCI_DEVICE}
+
+echo "BESS has been installed!"

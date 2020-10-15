@@ -30,23 +30,23 @@ sudo /etc/init.d/redis_6379 start
 # redis_6380
 # Set the init script
 sudo cp utils/redis_init_script /etc/init.d/redis_6380
-sed -i "s/6379/6380/g" /etc/init.d/redis_6380
+sudo sed -i "s/6379/6380/g" /etc/init.d/redis_6380
 # Set the data and working directory
 sudo mkdir /var/redis/6380
 # Set the redis config
 sudo cp /local/redis.conf /etc/redis/6380.conf
-sed -i "s/6379/6380/g" /etc/redis/6380.conf
+sudo sed -i "s/6379/6380/g" /etc/redis/6380.conf
 sudo update-rc.d redis_6380 defaults
 sudo /etc/init.d/redis_6380 start
 
 # redis_6381
 # Set the init script
 sudo cp utils/redis_init_script /etc/init.d/redis_6381
-sed -i "s/6379/6381/g" /etc/init.d/redis_6381
+sudo sed -i "s/6379/6381/g" /etc/init.d/redis_6381
 # Set the data and working directory
 sudo mkdir /var/redis/6381
 # Set the redis config
 sudo cp /local/redis.conf /etc/redis/6381.conf
-sed -i "s/6379/6381/g" /etc/redis/6381.conf
+sudo sed -i "s/6379/6381/g" /etc/redis/6381.conf
 sudo update-rc.d redis_6381 defaults
 sudo /etc/init.d/redis_6381 start
