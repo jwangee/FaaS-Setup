@@ -81,7 +81,9 @@ log "Installed docker"
 #sudo usermod -aG docker $USER
 #newgrp docker
 echo "{\"data-root\": \"/docker\"}" | sudo tee /etc/docker/daemon.json
+sudo systemctl daemon-reload
 sudo systemctl restart docker
+sudo systemctl enable docker
 log "Started docker"
 
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
