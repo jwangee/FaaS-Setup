@@ -14,8 +14,13 @@ sudo apt install -y libgflags-dev libgoogle-glog-dev libgraph-easy-perl libgtest
 sudo pip install protobuf grpcio scapy
 
 # Install Hiredis
+HIREDIS_DIR="/local/hiredis"
 cd /local
-git clone http://github.com/redis/hiredis
-cd hiredis/
-make
-sudo make install
+if [ -d ${HIREDIS_DIR} ]; then
+  echo "hiredis already exists."
+else
+  cd /local
+  git clone http://github.com/redis/hiredis
+  cd hiredis/
+  make
+  sudo make install

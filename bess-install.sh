@@ -1,7 +1,6 @@
 #!/bin/bash
 
-if [ -z "$1" ]
-  then
+if [ -z "$1" ]; then
     echo "No argurments supplied"
     exit 0
 fi
@@ -19,9 +18,20 @@ sudo apt install make apt-transport-https ca-certificates g++ make pkg-config li
 # The following packages are needed to run bessctl
 sudo pip install protobuf grpcio scapy
 
+# Install Hiredis
+HIREDIS_DIR="/local/hiredis"
+cd /local
+if [ -d ${HIREDIS_DIR} ]; then
+  echo "hiredis already exists."
+else
+  cd /local
+  git clone http://github.com/redis/hiredis
+  cd hiredis/
+  make
+  sudo make install
+
 # Install BESS
 BESS_DIR="/local/bess"
-
 cd /local
 if [ -d ${BESS_DIR} ]; then
   echo "BESS already exists."
@@ -55,12 +65,14 @@ fi
 sudo modprobe uio
 sudo insmod ${DPDK_DIR}/build/kmod/igb_uio.ko
 
+# Bind iface1
 INTERFACE=$(ifconfig | grep -B 1 ${NODE_IP_1} | head -1 | cut -d ':' -f 1 | cut -d ' ' -f 1)
 PCI_DEVICE=$(sudo lshw -class network -businfo | grep ${INTERFACE} | cut -d ' ' -f 1 | cut -d '@' -f 2)
-
 sudo ${DEV_BIND_TOOL} --force -u ${PCI_DEVICE}
 sudo ${DEV_BIND_TOOL} -b igb_uio ${PCI_DEVICE}
 
-
+# Bind iface2
 INTERFACE=$(ifconfig | grep -B 1 ${NODE_IP_2} | head -1 | cut -d ':' -f 1 | cut -d ' ' -f 1)
 PCI_DEVICE=$(sudo lshw -class network -businfo | grep ${INTERFACE} | cut -d ' ' -f 1 | cut -d '@' -f 2)
+sudo ${DEV_BIND_TOOL} --force -u ${PCI_DEVICE}
+sudo ${DEV_BIND_TOOL} -b igb_uio ${PCI_DEVICE}

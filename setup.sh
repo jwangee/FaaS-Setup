@@ -19,7 +19,7 @@ INSTALL_DIR=$(dirname ${0})
 LOG_FILE=/local/setup.log
 
 
-while getopts "h?t:i:n:" opt; do
+while getopts "h?t:i:j:n:" opt; do
     case "${opt}" in
         h|\?)
             usage
@@ -81,8 +81,8 @@ if [ "$NODE_TYPE" == "Master" ]; then
     bash /local/nf-install.sh >> ${LOG_FILE}
     bash /local/faas-node-info.sh -t Master -n $NODE_NAME
 elif [ "$NODE_TYPE" == "Traffic" ]; then
-    bash /local/bess-install.sh ${NODE_IP} ${NODE_IP_2} >> ${LOG_FILE}
     bash /local/nf-install.sh >> ${LOG_FILE}
+    bash /local/bess-install.sh ${NODE_IP} ${NODE_IP_2} >> ${LOG_FILE}
 elif [ "$NODE_TYPE" == "Worker" ]; then
     # Prepare local config first, and then connect to the master node.
     bash /local/sr-iov.sh ${NODE_IP} >> ${LOG_FILE}
