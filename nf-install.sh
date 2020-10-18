@@ -24,3 +24,4 @@ else
   cd hiredis/
   make
   sudo make install
+fi
