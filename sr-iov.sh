@@ -51,8 +51,14 @@ ip link show
 echo "Configures MAC address for vf..."
 sudo ip link set dev ${INTERFACE} down
 sudo ip link set dev ${INTERFACE} up
+# turn off rx filters
 sudo ethtool -K ${INTERFACE} ntuple off
+# turn off checksuming
 sudo ethtool -K ${INTERFACE} rx off tx off tso off
+# turn off pause frames
+sudo ethtool -A ${INTERFACE} rx off tx off
+# set the maximum queue size
+sudo ethtool -G ${INTERFACE} rx 4096 tx 4096
 
 sudo ip link set ${INTERFACE} vf 0 mac 00:00:00:00:00:01
 sudo ip link set ${INTERFACE} vf 1 mac 00:00:00:00:00:02
