@@ -7,7 +7,7 @@
 set -e
 
 usage() {
-        echo "post-setup.sh -t <NODE_TYPE> -i <NODE_IP> -n <NODE_NAME>"
+        echo "post-setup.sh -t <NODE_TYPE>"
 }
 
 NODE_TYPE=""
@@ -40,21 +40,15 @@ if [ -z ${NODE_TYPE} ]; then
         usage
         exit -1
 fi
-if [ -z ${NODE_IP} ]; then
-        usage
-        exit -1
-fi
-if [ -z ${NODE_NAME} ]; then
-        usage
-        exit -1
-fi
-
 
 if [ "$NODE_TYPE" == "Master" ]; then
+    echo '' >> ~/.bashrc
     echo 'export GO11MODULE=on' >> ~/.bashrc
     echo 'export PATH="$PATH:$(go env GOPATH)/bin"' >> ~/.bashrc
     echo 'alias nodes="kubectl get nodes"' >> ~/.bashrc
     echo 'alias pods="kubectl get pods -n openfaas-fn"' >> ~/.bashrc
     echo 'alias deps="kubectl get deployments -n openfaas-fn"' >> ~/.bashrc
     echo 'alias dd="kubectl delete deployments --all -n openfaas-fn"' >> ~/.bashrc
+    echo 'alias logs="kubectl logs -n openfaas-fn"' >> ~/.bashrc
+    source ~/.bashrc
 fi
