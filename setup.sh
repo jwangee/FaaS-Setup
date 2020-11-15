@@ -73,7 +73,7 @@ touch ${LOG_FILE}
 echo "" > ${LOG_FILE}
 
 sudo apt update
-sudo apt -y install htop
+sudo apt -y install htop cpufrequtils
 
 if [ "$NODE_TYPE" == "Master" ]; then
     bash /local/kub-install.sh -t Master -i ${NODE_IP} -n ${NODE_NAME} >> ${LOG_FILE}
@@ -86,6 +86,7 @@ elif [ "$NODE_TYPE" == "Traffic" ]; then
 elif [ "$NODE_TYPE" == "Worker" ]; then
     # Prepare local config first, and then connect to the master node.
     bash /local/sr-iov.sh ${NODE_IP} >> ${LOG_FILE}
+    bash /local/hyperthread_off.sh >> ${LOG_FILE}
     bash /local/faas-node-info.sh -t Worker -n $NODE_NAME
     bash /local/kub-install.sh -t Worker -i ${NODE_IP} -n ${NODE_NAME} >> ${LOG_FILE}
 fi

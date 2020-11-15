@@ -45,16 +45,16 @@ DPDK_VERSION="dpdk-17.11"
 DPDK_DIR="/local/${DPDK_VERSION}"
 DEV_BIND_TOOL="${DPDK_DIR}/usertools/dpdk-devbind.py"
 NODE_INFO_FILE=/local/${NODE_NAME}.info
-echo "NodeName=$NODE_NAME" > ${NODE_INFO_FILE}
-echo "IP=$NODE_PUBLIC_IP" >> ${NODE_INFO_FILE}
+echo "NodeName = $NODE_NAME" > ${NODE_INFO_FILE}
+echo "IP = $NODE_PUBLIC_IP" >> ${NODE_INFO_FILE}
 
 if [ "$NODE_TYPE" == "Master" ]; then
     # Handle FaaS master node.
-    echo "CPU=16" >> ${NODE_INFO_FILE}
+    echo "CPU = 16" >> ${NODE_INFO_FILE}
 else
     # Handle FaaS worker nodes.
     TOTAL_VF=$(sudo ${DEV_BIND_TOOL} --status | grep 'Virtual Function' | wc -l)
-    echo "CPU=$TOTAL_VF" >> ${NODE_INFO_FILE}
+    echo "CPU = $TOTAL_VF" >> ${NODE_INFO_FILE}
 
     DEV_BIND_TOOL="${DPDK_DIR}/usertools/dpdk-devbind.py"
     sudo ${DEV_BIND_TOOL} --status | grep 'Virtual Function' | cut -d ' ' -f 1 >> ${NODE_INFO_FILE}
