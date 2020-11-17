@@ -75,6 +75,11 @@ echo "" > ${LOG_FILE}
 sudo apt update
 sudo apt -y install htop cpufrequtils
 
+# Set cpufreq governor to 'performance'
+sudo touch /etc/default/cpufrequtils
+echo GOVERNOR="performance" | sudo tee /etc/default/cpufrequtils
+sudo systemctl restart cpufrequtils
+
 if [ "$NODE_TYPE" == "Master" ]; then
     bash /local/kub-install.sh -t Master -i ${NODE_IP} -n ${NODE_NAME} >> ${LOG_FILE}
     bash /local/go-install.sh >> ${LOG_FILE}
