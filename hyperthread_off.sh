@@ -17,4 +17,8 @@ for CPU_PATH in /sys/devices/system/cpu/cpu[0-9]*; do
         fi
 done
 
+# Fix the CPU frequency
+for x in /sys/devices/system/cpu/*/cpufreq/; do echo 2350000 | sudo tee $x/scaling_min_freq; done
+for x in /sys/devices/system/cpu/*/cpufreq/; do echo 2400000 | sudo tee $x/scaling_max_freq; done
+
 lscpu | grep -i -E  "^CPU\(s\):|core|socket"
