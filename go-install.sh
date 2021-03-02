@@ -1,9 +1,22 @@
 #!/bin/bash
 
-# Install Golang
-sudo add-apt-repository ppa:longsleep/golang-backports -y
-sudo apt-get update
-sudo apt-get install golang-go -y
+# Install Golang (Deprecated: it always installs the newest version)
+#sudo add-apt-repository ppa:longsleep/golang-backports -y
+#sudo apt-get update
+#sudo apt-get install golang-go -y
+
+# Install Golang 1.15
+sudo apt-get update -y
+wget https://dl.google.com/go/go1.15.6.linux-amd64.tar.gz
+sudo tar -xvf go1.15.6.linux-amd64.tar.gz
+sudo chown -R root:root ./go
+sudo mv -v go /usr/local
+
+echo '' >> ~/.bashrc
+echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
+echo 'GOPATH=$HOME/go' >> ~/.bashrc
+echo 'export PATH="$PATH:$(go env GOPATH)/bin"' >> ~/.bashrc
+source ~/.bashrc
 
 # Install protobuf
 sudo apt-get install autoconf automake libtool curl make g++ unzip -y

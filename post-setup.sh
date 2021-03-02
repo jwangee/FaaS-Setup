@@ -44,7 +44,6 @@ fi
 if [ "$NODE_TYPE" == "Master" ]; then
     echo '' >> ~/.bashrc
     echo 'export GO11MODULE=on' >> ~/.bashrc
-    echo 'export PATH="$PATH:$(go env GOPATH)/bin"' >> ~/.bashrc
     echo 'alias nodes="kubectl get nodes"' >> ~/.bashrc
     echo 'alias pods="kubectl get pods -n openfaas-fn"' >> ~/.bashrc
     echo 'alias deps="kubectl get deployments -n openfaas-fn"' >> ~/.bashrc
