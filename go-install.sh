@@ -6,16 +6,20 @@
 #sudo apt-get install golang-go -y
 
 # Install Golang 1.15
+# Go dir: /usr/local/go/bin
+cd /local/
 sudo apt-get update -y
 wget https://dl.google.com/go/go1.15.6.linux-amd64.tar.gz
 sudo tar -xvf go1.15.6.linux-amd64.tar.gz
 sudo chown -R root:root ./go
 sudo mv -v go /usr/local
 
+GO_PATH=$HOME/go
 echo '' >> ~/.bashrc
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
 echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
-echo 'GOPATH=$HOME/go' >> ~/.bashrc
-echo 'export PATH="$PATH:$(go env GOPATH)/bin"' >> ~/.bashrc
+echo 'export GOPATH=$GO_PATH' >> ~/.bashrc
+echo 'export PATH="$PATH:/users/uscnsl/go/bin"' >> ~/.bashrc
 source ~/.bashrc
 
 # Install protobuf
@@ -31,6 +35,10 @@ make check -j
 sudo make install
 sudo ldconfig
 cd -
+
+# Install protobuf compiler
+sudo apt-get install protobuf-compiler libprotobuf-dev -y
+cp /local/protoc-gen-go $GO_PATH/bin
 
 ## Install gRPC as a go module
 #export GO111MODULE=on
