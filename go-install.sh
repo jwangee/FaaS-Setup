@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Note that the package installer is run from a different account.
+USR_DIR=/users/uscnsl
+
 # Install Golang (Deprecated: it always installs the newest version)
 #sudo add-apt-repository ppa:longsleep/golang-backports -y
 #sudo apt-get update
@@ -7,6 +10,7 @@
 
 # Install Golang 1.15
 # Go dir: /usr/local/go/bin
+
 cd /local/
 sudo apt-get update -y
 wget https://dl.google.com/go/go1.15.6.linux-amd64.tar.gz
@@ -15,12 +19,12 @@ sudo chown -R root:root ./go
 sudo mv -v go /usr/local
 
 GO_PATH=$HOME/go
-echo '' >> ~/.bashrc
-echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
-echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
-echo 'export GOPATH=$GO_PATH' >> ~/.bashrc
-echo 'export PATH="$PATH:/users/uscnsl/go/bin"' >> ~/.bashrc
-source ~/.bashrc
+echo '' >> $USR_DIR/.bashrc
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> $USR_DIR/.bashrc
+echo 'export GOROOT=/usr/local/go' >> $USR_DIR/.bashrc
+echo 'export GOPATH=$GO_PATH' >> $USR_DIR/.bashrc
+echo 'export PATH="$PATH:/users/uscnsl/go/bin"' >> $USR_DIR/.bashrc
+source $USR_DIR/.bashrc
 
 # Install protobuf
 sudo apt-get install autoconf automake libtool curl make g++ unzip -y
