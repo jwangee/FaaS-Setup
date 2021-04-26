@@ -42,8 +42,17 @@ if [ -z ${NODE_TYPE} ]; then
 fi
 
 if [ "$NODE_TYPE" == "Master" ]; then
+    # Replace the protoc-gen with the right version
+    cp /local/protoc-gen-go ~/go/bin/
+
     echo '' >> ~/.bashrc
+    echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
+    echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
+    echo 'export GOPATH=$GO_PATH' >> ~/.bashrc
+    echo 'export PATH="$PATH:/users/uscnsl/go/bin"' >> ~/.bashrc
     echo 'export GO11MODULE=on' >> ~/.bashrc
+
+    echo '' >> ~/.bashrc
     echo 'alias nodes="kubectl get nodes"' >> ~/.bashrc
     echo 'alias pods="kubectl get pods -n openfaas-fn"' >> ~/.bashrc
     echo 'alias deps="kubectl get deployments -n openfaas-fn"' >> ~/.bashrc
